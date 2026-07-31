@@ -9,11 +9,15 @@ public class PlayerController : MonoBehaviour
 {
     //変数宣言
     [SerializeField] private float moveSpeed = 3.0f;
+    [SerializeField] private float turnSpeed = 3.0f;
     [SerializeField] private float jumpPower = 3.0f;
+    [SerializeField] GameObject camera_player;
     private CharacterController characterController;
     private Vector3 moveVelocity;
     private InputAction move;
     private InputAction jump;
+    private InputAction turn;
+    private float cameraAngle = 0;
     void Start()
     {
         characterController = GetComponent<CharacterController>();
@@ -22,12 +26,25 @@ public class PlayerController : MonoBehaviour
 
         move = input.currentActionMap.FindAction("move");
         jump = input.currentActionMap.FindAction("jump");
+        turn = input.currentActionMap.FindAction("turn");
     }
     void Update()
     {
         var moveValue = move.ReadValue<Vector2>();
-        moveVelocity.x = moveValue.x * moveSpeed;
-        moveVelocity.z = moveValue.y * moveSpeed;
+
+        Vector3 moveDirection = transform.right * moveValue.x + transform.forward * moveValue.y;
+
+        moveVelocity.x = moveDirection.x * moveSpeed;
+        moveVelocity.z = moveDirection.z * moveSpeed;
+
+        var turnValue = turn.ReadValue<Vector2>();
+        this.gameObject.transform.Rotate(0, turnValue.x * turnSpeed * Time.deltaTime, 0);
+
+        cameraAngle -= turnValue.y * turnSpeed * Time.deltaTime;
+        cameraAngle = Mathf.Clamp(cameraAngle, -30f, 45f);
+
+        camera_player.transform.localRotation =
+            Quaternion.Euler(cameraAngle, 0, 0);
 
         if (characterController.isGrounded)
         {
