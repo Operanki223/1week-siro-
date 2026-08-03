@@ -30,6 +30,19 @@ public class PlayerController : MonoBehaviour
     }
     void Update()
     {
+
+        ControllePlayer();
+
+    }
+
+    void ControllePlayer()
+    {
+        if (!GameManager.instance.playGame)
+        {
+            moveVelocity = Vector3.zero;
+            return;
+        }
+
         var moveValue = move.ReadValue<Vector2>();
 
         Vector3 moveDirection = transform.right * moveValue.x + transform.forward * moveValue.y;
@@ -59,5 +72,17 @@ public class PlayerController : MonoBehaviour
         }
 
         characterController.Move(moveVelocity * Time.deltaTime);
+    }
+
+    public void ResetVelocity()
+    {
+        moveVelocity = Vector3.zero;
+    }
+
+    public void ResetCamera()
+    {
+        cameraAngle = 0;
+        camera_player.transform.localRotation =
+            Quaternion.Euler(0, 0, 0);
     }
 }
