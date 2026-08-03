@@ -45051,6 +45051,8 @@ MonoBehaviour:
   turnSpeed: 50
   jumpPower: 3
   camera_player: {fileID: 1469396099}
+  drunkStrength: 0.05
+  drunkInterval: 0.5
 --- !u!65 &920508925
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -107735,6 +107737,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 578751949}
     m_Modifications:
+    - target: {fileID: 1511085609583209104, guid: e7a7902a43eba4b4199a6c2925fc7f02, type: 3}
+      propertyPath: m_Name
+      value: "\u6B69\u9053_\u7A74_1"
+      objectReference: {fileID: 0}
     - target: {fileID: 2284350818966122538, guid: e7a7902a43eba4b4199a6c2925fc7f02, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0.5
@@ -107774,10 +107780,6 @@ PrefabInstance:
     - target: {fileID: 2284350818966122538, guid: e7a7902a43eba4b4199a6c2925fc7f02, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1511085609583209104, guid: e7a7902a43eba4b4199a6c2925fc7f02, type: 3}
-      propertyPath: m_Name
-      value: "\u6B69\u9053_\u7A74_1"
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

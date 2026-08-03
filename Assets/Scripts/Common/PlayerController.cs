@@ -12,12 +12,17 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private float turnSpeed = 3.0f;
     [SerializeField] private float jumpPower = 3.0f;
     [SerializeField] GameObject camera_player;
+    [SerializeField] private float drunkStrength = 1.5f;   // 横に流される強さ
+    [SerializeField] private float drunkInterval = 0.5f;   // 何秒ごとに方向を変える
     private CharacterController characterController;
     private Vector3 moveVelocity;
     private InputAction move;
     private InputAction jump;
     private InputAction turn;
     private float cameraAngle = 0;
+    private Vector3 drunkOffset = Vector3.zero;
+    private float drunkTimer = 0f;
+    private Vector3 targetDrunkOffset;
     void Start()
     {
         characterController = GetComponent<CharacterController>();
@@ -46,6 +51,11 @@ public class PlayerController : MonoBehaviour
         var moveValue = move.ReadValue<Vector2>();
 
         Vector3 moveDirection = transform.right * moveValue.x + transform.forward * moveValue.y;
+
+        DrunkMove();
+
+        // ランダム移動を加算
+        moveDirection += drunkOffset;
 
         moveVelocity.x = moveDirection.x * moveSpeed;
         moveVelocity.z = moveDirection.z * moveSpeed;
@@ -84,5 +94,28 @@ public class PlayerController : MonoBehaviour
         cameraAngle = 0;
         camera_player.transform.localRotation =
             Quaternion.Euler(0, 0, 0);
+    }
+
+    void DrunkMove()
+    {
+        drunkTimer += Time.deltaTime;
+
+        if (drunkTimer >= drunkInterval)
+        {
+            drunkTimer = 0f;
+
+            Vector3[] dirs =
+            {
+            transform.forward,
+            -transform.forward,
+            transform.right,
+            -transform.right
+        };
+
+            targetDrunkOffset = dirs[Random.Range(0, dirs.Length)] * drunkStrength;
+        }
+
+        // 徐々に現在の方向を変える
+        drunkOffset = Vector3.Lerp(drunkOffset, targetDrunkOffset, Time.deltaTime * 5f);
     }
 }
