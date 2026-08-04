@@ -54,7 +54,7 @@ public class PlayerController : MonoBehaviour
 
         DrunkMove();
 
-        // ランダム移動を加算
+        // ランダム移動を加算(酔いの再現)
         moveDirection += drunkOffset;
 
         moveVelocity.x = moveDirection.x * moveSpeed;
@@ -93,7 +93,7 @@ public class PlayerController : MonoBehaviour
     {
         cameraAngle = 0;
         camera_player.transform.localRotation =
-            Quaternion.Euler(0, 0, 0);
+        Quaternion.Euler(0, 0, 0);
     }
 
     void DrunkMove()

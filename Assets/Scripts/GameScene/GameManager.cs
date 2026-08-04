@@ -13,6 +13,7 @@ public class Item
 public enum Items
 {
     Beer,
+    Water,
 }
 
 public class GameManager : MonoBehaviour
@@ -20,6 +21,7 @@ public class GameManager : MonoBehaviour
     [SerializeField] List<GameObject> itemList = new List<GameObject>();
     [SerializeField] List<Item> itemPointList = new List<Item>();
     [SerializeField] GameObject itemParent;
+    [SerializeField] GameObject carParent;
     [SerializeField] GameObject playerObjecet;
     [SerializeField] GameObject camera_player;
     [SerializeField] private Image gaugeImage;
@@ -35,7 +37,6 @@ public class GameManager : MonoBehaviour
     public bool playGame = true;
     private Vector3 savePosition;
     private float nextTime;
-
     public void Awake()
     {
         if (instance == null)
@@ -55,16 +56,16 @@ public class GameManager : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.K) || alcoholGauge > gaugeLimit - 1)
         {
-            gameOverPanel.SetActive(true);
-            playGame = false;
+            GameOver();
         }
-
         Timer();
         Alcoholgauge();
     }
 
     void Reset()
     {
+        CarSpawnPoint.instance.StartCarSpawn();
+
         PlayerController playerController =
         playerObjecet.GetComponent<PlayerController>();
 
@@ -96,6 +97,7 @@ public class GameManager : MonoBehaviour
         time = 0;
         alcoholGauge = 0;
         nextTime = alcoholGaugeSpeed;
+        CarSpawnPoint.instance.StartCarSpawn();
 
         if (savePointNum == 0)
         {
@@ -124,6 +126,14 @@ public class GameManager : MonoBehaviour
 
         gameOverPanel.SetActive(false);
         playGame = true;
+    }
+
+    public void GameOver()
+    {
+        gameOverPanel.SetActive(true);
+        playGame = false;
+        CarSpawnPoint.instance.StopCarSpawn();
+        ClearAllCar();
     }
 
     void Alcoholgauge()
@@ -169,6 +179,14 @@ public class GameManager : MonoBehaviour
         for (int i = itemParent.transform.childCount - 1; i >= 0; i--)
         {
             Destroy(itemParent.transform.GetChild(i).gameObject);
+        }
+    }
+
+    void ClearAllCar()
+    {
+        for (int i = carParent.transform.childCount - 1; i >= 0; i--)
+        {
+            Destroy(carParent.transform.GetChild(i).gameObject);
         }
     }
 }
