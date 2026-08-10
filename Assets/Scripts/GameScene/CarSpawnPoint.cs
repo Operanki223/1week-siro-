@@ -49,6 +49,6 @@ public class CarSpawnPoint : MonoBehaviour
 
     public void StopCarSpawn()
     {
-        isTime = true;
+        isTime = false;
     }
 }

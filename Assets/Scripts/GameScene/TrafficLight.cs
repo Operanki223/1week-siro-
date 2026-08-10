@@ -18,7 +18,7 @@ public class TrafficLight : MonoBehaviour
             timer = 0;
             isRed = !isRed;
 
-            Debug.Log(isRed ? "赤信号" : "青信号");
+            // Debug.Log(isRed ? "赤信号" : "青信号");
         }
 
         if (isRed)

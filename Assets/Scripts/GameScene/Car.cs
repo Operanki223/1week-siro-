@@ -150,6 +150,6 @@ public class Car : MonoBehaviour
     public void StopByTrafficLight(bool stop)
     {
         stopBySignal = stop;
-        Debug.Log("信号：" + stop);
+        //Debug.Log("信号：" + stop);
     }
 }

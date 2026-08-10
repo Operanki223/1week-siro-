@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using NUnit.Framework;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -27,6 +28,7 @@ public class GameManager : MonoBehaviour
     [SerializeField] private Image gaugeImage;
     [SerializeField] List<GameObject> savePoints = new List<GameObject>();
     [SerializeField] GameObject gameOverPanel;
+    [SerializeField] GameObject finishPanel;
     [SerializeField] float alcoholGaugeSpeed = 5;
     [SerializeField] int alcoholGauge = 0;
     [SerializeField] float time = 0;
@@ -37,6 +39,7 @@ public class GameManager : MonoBehaviour
     public bool playGame = true;
     private Vector3 savePosition;
     private float nextTime;
+    private bool isPlay = true;
     public void Awake()
     {
         if (instance == null)
@@ -56,8 +59,14 @@ public class GameManager : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.K) || alcoholGauge > gaugeLimit - 1)
         {
+            isPlay = false;
+        }
+
+        if (!isPlay)
+        {
             GameOver();
         }
+
         Timer();
         Alcoholgauge();
     }
@@ -84,12 +93,16 @@ public class GameManager : MonoBehaviour
         playerController.ResetCamera();
 
         gameOverPanel.SetActive(false);
+        FinishPanelSetActive(false);
         playGame = true;
         time = 0;
         alcoholGauge = 0;
         nextTime = alcoholGaugeSpeed;
+        isPlay = true;
+        Time.timeScale = 1;
         ClearAllItem();
         ItemSpawn();
+        PlayerController.instance.StartPlayer();
     }
 
     public void ContinueGame()
@@ -125,7 +138,11 @@ public class GameManager : MonoBehaviour
         playerController.ResetCamera();
 
         gameOverPanel.SetActive(false);
+        FinishPanelSetActive(false);
         playGame = true;
+        isPlay = true;
+        Time.timeScale = 1;
+        PlayerController.instance.StartPlayer();
     }
 
     public void GameOver()
@@ -134,6 +151,13 @@ public class GameManager : MonoBehaviour
         playGame = false;
         CarSpawnPoint.instance.StopCarSpawn();
         ClearAllCar();
+        StopGame();
+    }
+
+    public void StopGame()
+    {
+        playGame = false;
+        Time.timeScale = 0;
     }
 
     void Alcoholgauge()
@@ -188,5 +212,10 @@ public class GameManager : MonoBehaviour
         {
             Destroy(carParent.transform.GetChild(i).gameObject);
         }
+    }
+
+    public void FinishPanelSetActive(bool isPanel)
+    {
+        finishPanel.SetActive(isPanel);
     }
 }

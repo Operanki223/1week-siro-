@@ -11,6 +11,9 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/OpeningScene.unity
     guid: 0ed0f940a9c2f484b973fab83529de83
+  - enabled: 1
+    path: Assets/Scenes/DemoMapScene.unity
+    guid: 78f9425eb58418141b4b6ee727d9fb90
   m_configObjects:
     com.unity.input.settings: {fileID: 11400000, guid: 1fff7a8d2a4fb394e9208a2adf9e2797, type: 2}
     com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 052faaac586de48259a63d0c4782560b, type: 3}
