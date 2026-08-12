@@ -7,17 +7,17 @@ public class SceneChanger : MonoBehaviour
     {
         DontDestroyOnLoad(this.gameObject);
     }
-    public void startScene()
+    public void StartScene()
     {
         SceneManager.LoadScene("StartScene");
     }
 
-    public void openingScene()
+    public void OpeningScene()
     {
         SceneManager.LoadScene("OpeningScene");
     }
 
-    public void demoMapScene()
+    public void DemoMapScene()
     {
         SceneManager.LoadScene("DemoMapScene");
     }
