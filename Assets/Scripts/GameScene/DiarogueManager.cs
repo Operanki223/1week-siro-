@@ -20,11 +20,7 @@ public class DialogueManager : MonoBehaviour
     [Header("選択肢パネル")]
     [SerializeField]
     private List<GameObject> choicePanelList = new List<GameObject>();
-
-    [Header("選択肢ボタン")]
-    [SerializeField]
-    private Button[] choiceButtons;
-
+    private GameObject currentChoicePanel;
     private DialogueData dialogueData;
 
     private int currentNode = 0;
@@ -132,7 +128,6 @@ public class DialogueManager : MonoBehaviour
     // 現在の会話を表示
     private void ShowDialogue()
     {
-        // ノードの範囲チェック
         if (currentNode < 0 ||
             currentNode >= dialogueData.nodes.Count)
         {
@@ -147,39 +142,27 @@ public class DialogueManager : MonoBehaviour
 
         DialogueNode node = dialogueData.nodes[currentNode];
 
+        // この会話に入ったときの処理
+        node.onNodeEnter?.Invoke();
+
         // 話者
         speakerText.text = node.speaker;
 
         // セリフ
         dialogueText.text = node.text;
 
-
-        // -----------------------------------------------------
-        // 選択肢がある場合
-        // -----------------------------------------------------
-
         if (node.choices != null &&
             node.choices.Count > 0)
         {
-            // 次へボタンを非表示
             nextButton.gameObject.SetActive(false);
 
-            // 選択肢を表示
             ShowChoicePanel(node);
-
             ShowChoices(node);
         }
-
-        // -----------------------------------------------------
-        // 選択肢がない場合
-        // -----------------------------------------------------
-
         else
         {
-            // 選択肢パネルを全て非表示
             HideAllChoicePanels();
 
-            // 次へボタンを表示
             nextButton.gameObject.SetActive(true);
         }
     }
@@ -192,29 +175,36 @@ public class DialogueManager : MonoBehaviour
     // ノードに設定されたパネルを表示
     private void ShowChoicePanel(DialogueNode node)
     {
-        // 一旦すべてのパネルを非表示
+        // すべて非表示
         HideAllChoicePanels();
 
-        // パネル番号
         int panelIndex = node.choicePanelIndex;
 
-        // 範囲チェック
         if (panelIndex < 0 ||
             panelIndex >= choicePanelList.Count)
         {
             Debug.LogError(
                 "指定された選択肢パネルが存在しません。"
-                + "PanelIndex : "
+                + " PanelIndex : "
                 + panelIndex
             );
 
             return;
         }
 
-        // 指定されたパネルだけ表示
-        if (choicePanelList[panelIndex] != null)
+        // 現在のパネルを保存
+        currentChoicePanel = choicePanelList[panelIndex];
+
+        if (currentChoicePanel != null)
         {
-            choicePanelList[panelIndex].SetActive(true);
+            currentChoicePanel.SetActive(true);
+
+            // ★追加修正：表示直後にレイアウトとUI座標を強制再計算して当たりのズレを直す
+            RectTransform rect = currentChoicePanel.GetComponent<RectTransform>();
+            if (rect != null)
+            {
+                LayoutRebuilder.ForceRebuildLayoutImmediate(rect);
+            }
         }
         else
         {
@@ -237,6 +227,9 @@ public class DialogueManager : MonoBehaviour
                 choicePanelList[i].SetActive(false);
             }
         }
+
+        // 現在の選択肢パネルをクリア
+        currentChoicePanel = null;
     }
 
 
@@ -248,6 +241,9 @@ public class DialogueManager : MonoBehaviour
     {
         DialogueNode node = dialogueData.nodes[currentNode];
 
+        // 現在の会話から出るときの処理
+        node.onNodeExit?.Invoke();
+
         // 次のノードが設定されていない
         if (node.nextNode < 0)
         {
@@ -255,10 +251,8 @@ public class DialogueManager : MonoBehaviour
             return;
         }
 
-        // 次のノード
         currentNode = node.nextNode;
 
-        // 範囲外チェック
         if (currentNode < 0 ||
             currentNode >= dialogueData.nodes.Count)
         {
@@ -271,7 +265,6 @@ public class DialogueManager : MonoBehaviour
             return;
         }
 
-        // 次の会話を表示
         ShowDialogue();
     }
 
@@ -282,57 +275,99 @@ public class DialogueManager : MonoBehaviour
 
     private void ShowChoices(DialogueNode node)
     {
-        // 全ボタンを非表示
+        if (currentChoicePanel == null)
+        {
+            Debug.LogError("現在開いている選択肢パネルがありません。");
+            return;
+        }
+
+        Button[] choiceButtons =
+            currentChoicePanel.GetComponentsInChildren<Button>(true);
+
+        // すべてのボタンを初期化
         for (int i = 0; i < choiceButtons.Length; i++)
         {
             choiceButtons[i].gameObject.SetActive(false);
-
-            // 以前のイベントを削除
             choiceButtons[i].onClick.RemoveAllListeners();
+
+            ChoiceButton choiceButton =
+                choiceButtons[i].GetComponent<ChoiceButton>();
+
+            if (choiceButton != null)
+            {
+                choiceButton.SetChoice(null);
+            }
         }
 
-
-        // 選択肢を表示
+        // 選択肢を設定
         for (int i = 0; i < node.choices.Count; i++)
         {
-            // ボタン数を超えた場合
             if (i >= choiceButtons.Length)
             {
                 Debug.LogWarning(
-                    "選択肢の数がボタン数を超えています"
+                    "選択肢の数がボタン数を超えています。"
                 );
 
                 break;
             }
 
+            Button button = choiceButtons[i];
             DialogueChoice choice = node.choices[i];
 
-            // ボタンを表示
-            choiceButtons[i].gameObject.SetActive(true);
+            // ChoiceButtonを取得
+            ChoiceButton choiceButton =
+                button.GetComponent<ChoiceButton>();
 
+            if (choiceButton == null)
+            {
+                Debug.LogError(
+                    button.name +
+                    " にChoiceButtonがありません。"
+                );
 
-            // ボタンのテキストを取得
+                continue;
+            }
+
+            // このボタンにChoiceを登録
+            choiceButton.SetChoice(choice);
+
+            // ボタン表示
+            button.gameObject.SetActive(true);
+
+            // テキスト設定
             TMP_Text buttonText =
-                choiceButtons[i].GetComponentInChildren<TMP_Text>();
+                button.GetComponentInChildren<TMP_Text>();
 
-
-            // テキストを設定
             if (buttonText != null)
             {
                 buttonText.text = choice.text;
             }
-            else
+
+            // ★追加修正：クロージャ（ラムダ式）内で使用する参照をローカル変数に固定
+            Button targetButton = button;
+            ChoiceButton targetChoiceButton = choiceButton;
+
+            targetButton.onClick.AddListener(() =>
             {
-                Debug.LogWarning(
-                    "選択肢ボタンにTMP_Textがありません。"
+                DialogueChoice selectedChoice =
+                    targetChoiceButton.GetChoice();
+
+                Debug.Log(
+                    "押されたボタン : " +
+                    targetButton.name
                 );
-            }
 
+                Debug.Log(
+                    "選択肢 : " +
+                    selectedChoice.text
+                );
 
-            // 選択時のイベント
-            choiceButtons[i].onClick.AddListener(() =>
-            {
-                SelectChoice(choice);
+                Debug.Log(
+                    "移動先Node : " +
+                    selectedChoice.nextNode
+                );
+
+                SelectChoice(selectedChoice);
             });
         }
     }
@@ -344,42 +379,53 @@ public class DialogueManager : MonoBehaviour
 
     private void SelectChoice(DialogueChoice choice)
     {
-        // 選択時のイベントを実行
+        if (choice == null)
+        {
+            Debug.LogError("DialogueChoiceがnullです。");
+            return;
+        }
+
+        Debug.Log(
+            "=============================="
+        );
+
+        Debug.Log(
+            "選択肢 : " + choice.text
+        );
+
+        Debug.Log(
+            "分岐先Node : " + choice.nextNode
+        );
+
+        Debug.Log(
+            "現在Node : " + currentNode
+        );
+
         choice.onSelected?.Invoke();
 
-
-        // 分岐先がない場合
         if (choice.nextNode < 0)
         {
             EndDialogue();
             return;
         }
 
-
-        // 範囲外チェック
         if (choice.nextNode >= dialogueData.nodes.Count)
         {
             Debug.LogError(
-                "選択肢の分岐先が存在しません。Node : "
-                + choice.nextNode
+                "存在しないNodeです : " +
+                choice.nextNode
             );
 
             EndDialogue();
             return;
         }
 
-
-        // 次のノード
         currentNode = choice.nextNode;
 
+        Debug.Log(
+            "移動後Node : " + currentNode
+        );
 
-        // 次のノードでShowDialogue()が
-        // 適切なパネルを表示するので、
-        // ここでは全パネルを一旦非表示にする
-        HideAllChoicePanels();
-
-
-        // 次の会話を表示
         ShowDialogue();
     }
 

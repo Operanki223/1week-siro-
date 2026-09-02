@@ -123,7 +123,7 @@ public class Car : MonoBehaviour
     {
         if (other.CompareTag("Player"))
         {
-            Debug.Log("a");
+            //Debug.Log("a");
             GameManager.instance.GameOver();
         }
     }

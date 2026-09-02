@@ -179,7 +179,7 @@ public class GameManager : MonoBehaviour
 
     public void AddGauge(int amount)
     {
-        Debug.Log(amount + "ゲージ追加");
+        //Debug.Log(amount + "ゲージ追加");
         alcoholGauge += amount;
         alcoholGauge = Mathf.Clamp(alcoholGauge, 0, gaugeLimit);
     }

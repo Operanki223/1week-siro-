@@ -2,11 +2,13 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 
+
 [CreateAssetMenu(fileName = "NewDialogue", menuName = "Dialogue/Dialogue Data")]
 public class DialogueData : ScriptableObject
 {
     public List<DialogueNode> nodes = new List<DialogueNode>();
 }
+
 
 
 [System.Serializable]
@@ -30,7 +32,16 @@ public class DialogueNode
 
     [Header("選択肢がない場合の次のノード")]
     public int nextNode = -1;
+
+
+    [Header("この会話に入ったときの処理")]
+    public UnityEvent onNodeEnter;
+
+
+    [Header("この会話から次へ進むときの処理")]
+    public UnityEvent onNodeExit;
 }
+
 
 
 [System.Serializable]

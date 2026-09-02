@@ -13,37 +13,69 @@ MonoBehaviour:
   m_Name: DialogueData0
   m_EditorClassIdentifier: Assembly-CSharp::DialogueData
   nodes:
-  - speaker: S
-    text: assasasaa
+  - speaker: "\u8B66\u5BDF"
+    text: "\u3061\u3087\u3063\u3068\u3001\u8077\u52D9\u8CEA\u554F\u3057\u3066\u3082\u3088\u308D\u3057\u3044\u3067\u3057\u3087\u3046\u304B\uFF1F"
     choices: []
+    choicePanelIndex: 0
     nextNode: 1
-  - speaker: SS
-    text: sasaaaa
+    onNodeEnter:
+      m_PersistentCalls:
+        m_Calls: []
+    onNodeExit:
+      m_PersistentCalls:
+        m_Calls: []
+  - speaker: "\u8B66\u5BDF"
+    text: "\u3042\u306A\u305F\u306E\u8077\u696D\u306F\u4F55\u3067\u3059\u304B\uFF1F"
     choices:
-    - text: A
-      nextNode: -1
-      onSelected:
-        m_PersistentCalls:
-          m_Calls:
-          - m_Target: {fileID: -3936930780002703214, guid: 97f32cb0934fd694d86669d7a3213701, type: 3}
-            m_TargetAssemblyTypeName: Events, Assembly-CSharp
-            m_MethodName: GameOver
-            m_Mode: 1
-            m_Arguments:
-              m_ObjectArgument: {fileID: 0}
-              m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-              m_IntArgument: 0
-              m_FloatArgument: 0
-              m_StringArgument: 
-              m_BoolArgument: 0
-            m_CallState: 2
-    - text: B
+    - text: "\u30B5\u30E9\u30EA\u30FC\u30DE\u30F3"
       nextNode: 2
       onSelected:
         m_PersistentCalls:
           m_Calls: []
+    - text: "\u9EBB\u85AC\u306E\u5BC6\u58F2\u4EBA"
+      nextNode: 3
+      onSelected:
+        m_PersistentCalls:
+          m_Calls: []
+    choicePanelIndex: 0
     nextNode: 0
-  - speaker: SS
-    text: "\u305D\u3046\u304B"
+    onNodeEnter:
+      m_PersistentCalls:
+        m_Calls: []
+    onNodeExit:
+      m_PersistentCalls:
+        m_Calls: []
+  - speaker: "\u8B66\u5BDF"
+    text: "\u305D\u308C\u306A\u3089\u554F\u984C\u306A\u3044\u3067\u3059"
     choices: []
+    choicePanelIndex: 0
     nextNode: -1
+    onNodeEnter:
+      m_PersistentCalls:
+        m_Calls: []
+    onNodeExit:
+      m_PersistentCalls:
+        m_Calls: []
+  - speaker: "\u8B66\u5BDF"
+    text: "\u306A\u306B\u30FC\uFF01\uFF01\\n\u3061\u3087\u3063\u3068\u6240\u307E\u3067\u6765\u3066\u6765\u3066\u3082\u3089\u304A\u3046\u304B\u306D"
+    choices: []
+    choicePanelIndex: 0
+    nextNode: -1
+    onNodeEnter:
+      m_PersistentCalls:
+        m_Calls: []
+    onNodeExit:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: -3936930780002703214, guid: 97f32cb0934fd694d86669d7a3213701, type: 3}
+          m_TargetAssemblyTypeName: Events, Assembly-CSharp
+          m_MethodName: GameOver
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 1
