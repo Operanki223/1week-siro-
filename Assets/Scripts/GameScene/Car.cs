@@ -119,14 +119,14 @@ public class Car : MonoBehaviour
         rb.MovePosition(rb.position + transform.forward * carSpeed * Time.deltaTime);
     }
 
-    private void OnTriggerEnter(Collider other)
-    {
-        if (other.CompareTag("Player"))
-        {
-            //Debug.Log("a");
-            GameManager.instance.GameOver();
-        }
-    }
+    // private void OnTriggerEnter(Collider other)
+    // {
+    //     if (other.CompareTag("Player"))
+    //     {
+    //         //Debug.Log("a");
+    //         GameManager.instance.GameOver();
+    //     }
+    // }
 
     void StopByCar()
     {

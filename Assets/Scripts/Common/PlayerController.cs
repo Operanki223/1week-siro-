@@ -187,4 +187,13 @@ public class PlayerController : MonoBehaviour
             Time.deltaTime * 5f
         );
     }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.CompareTag("Enemy") || other.CompareTag("Car"))
+        {
+            //Debug.Log("a");
+            GameManager.instance.GameOver();
+        }
+    }
 }

@@ -32,6 +32,7 @@ public class GameManager : MonoBehaviour
     [SerializeField] float alcoholGaugeSpeed = 5;
     [SerializeField] int alcoholGauge = 0;
     [SerializeField] float time = 0;
+    [SerializeField] bool resetPosition = true;
 
     public int savePointNum = 0;
     public static GameManager instance;
@@ -84,8 +85,11 @@ public class GameManager : MonoBehaviour
         controller.enabled = false;
 
         // プレイヤーを初期位置に移動
-        playerObjecet.transform.position = new Vector3(0, 1.25f, 0);
-        playerObjecet.transform.rotation = Quaternion.Euler(0, 0, 0);
+        if (!resetPosition)
+        {
+            playerObjecet.transform.position = new Vector3(0, 1.25f, 0);
+            playerObjecet.transform.rotation = Quaternion.Euler(0, 0, 0);
+        }
 
         controller.enabled = true;
 
